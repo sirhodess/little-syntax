@@ -1,6 +1,6 @@
 # Little Syntax
 
-Little Syntax is an educational interpreter designed to help younger learners bridge the gap between block-based coding and text-based programming languages like Python and JavaScript.
+Little Syntax is a beginner-friendly programming language and interpreter built for a future gamified learning platform. The project teaches core programming concepts through simple syntax, readable errors, and quest-style coding challenges.
 
 ## Features
 
