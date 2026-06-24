@@ -16,4 +16,13 @@ Little Syntax is a beginner-friendly programming language and interpreter built 
 - Programming Languages
 - EdTech
 
+## Roadmap
 
+- [x] Set up project structure
+- [ ] Milestone 1: `say` command
+- [ ] Milestone 2: variables with `let`
+- [ ] Milestone 3: numbers and math
+- [ ] Milestone 4: conditionals with `if` / `else`
+- [ ] Milestone 5: loops with `repeat`
+- [ ] Milestone 6: quest checker prototype
+- [ ] Milestone 7: web playground
