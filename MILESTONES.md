@@ -24,3 +24,12 @@ Example:
 ```ls
 say "Hello, traveler!"
 ```
+
+- [x] Create AST nodes
+- [x] Create lexer
+- [x] Create parser
+- [x] Create interpreter
+- [x] Add `run_source()` helper
+- [x] Add first test
+
+Status: Complete
