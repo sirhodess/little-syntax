@@ -20,7 +20,7 @@ Little Syntax is a beginner-friendly programming language and interpreter built 
 
 - [x] Set up project structure
 - [x] Milestone 1: `say` command
-- [ ] Milestone 2: variables with `let`
+- [x] Milestone 2: variables with `let`
 - [ ] Milestone 3: numbers and math
 - [ ] Milestone 4: conditionals with `if` / `else`
 - [ ] Milestone 5: loops with `repeat`
