@@ -48,3 +48,20 @@ Expected output: Milo
 ```
 
 Status: Complete
+
+---
+
+## Milestone 3: Numbers and Math
+
+**Goal:** Let learners use numbers and basic arithmetic.
+
+Example:
+
+```ls
+let coins = 3
+say coins + 2
+
+Expected output: 5
+```
+
+Status: Complete
