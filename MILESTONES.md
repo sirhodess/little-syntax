@@ -65,3 +65,37 @@ Expected output: 5
 ```
 
 Status: Complete
+
+---
+
+## Milestone 4: Conditionals
+
+**Goal:** Let learners make choices with `if` and `else`.
+
+Example:
+
+```ls
+let coins = 5
+
+if coins >= 5 {
+  say "The gate opens!"
+} else {
+  say "You need more coins."
+}
+```
+
+Tasks:
+
+Add if keyword
+Add else keyword
+Add boolean values with true and false
+Add comparison operators: >, >=, <, <=
+Add equality operators: ==, !=
+Add block parsing with { }
+Add if statement execution
+Add optional else branch
+Add friendly error for non-boolean conditions
+Add conditional example file
+Add conditional tests
+
+Status: Complete
