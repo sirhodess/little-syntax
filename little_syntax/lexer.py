@@ -24,6 +24,10 @@ class LittleSyntaxLexerError(Exception):
 KEYWORDS = {
     "say": "SAY",
     "let": "LET",
+    "if": "IF",
+    "else": "ELSE",
+    "true": "TRUE",
+    "false": "FALSE",
 }
 
 
@@ -39,7 +43,42 @@ def tokenize(source: str) -> list[Token]:
             continue
 
         if char == "=":
+            if i + 1 < len(source) and source[i + 1] == "=":
+                tokens.append(Token("EQUAL_EQUAL", "=="))
+                i += 2
+                continue
+
             tokens.append(Token("EQUAL", "="))
+            i += 1
+            continue
+
+        if char == "!":
+            if i + 1 < len(source) and source[i + 1] == "=":
+                tokens.append(Token("BANG_EQUAL", "!="))
+                i += 2
+                continue
+
+            raise LittleSyntaxLexerError(
+                "I found '!', but did you mean '!=' for not equal?"
+            )
+
+        if char == ">":
+            if i + 1 < len(source) and source[i + 1] == "=":
+                tokens.append(Token("GREATER_EQUAL", ">="))
+                i += 2
+                continue
+
+            tokens.append(Token("GREATER", ">"))
+            i += 1
+            continue
+
+        if char == "<":
+            if i + 1 < len(source) and source[i + 1] == "=":
+                tokens.append(Token("LESS_EQUAL", "<="))
+                i += 2
+                continue
+
+            tokens.append(Token("LESS", "<"))
             i += 1
             continue
 
@@ -70,6 +109,16 @@ def tokenize(source: str) -> list[Token]:
 
         if char == ")":
             tokens.append(Token("RIGHT_PAREN", ")"))
+            i += 1
+            continue
+
+        if char == "{":
+            tokens.append(Token("LEFT_BRACE", "{"))
+            i += 1
+            continue
+
+        if char == "}":
+            tokens.append(Token("RIGHT_BRACE", "}"))
             i += 1
             continue
 

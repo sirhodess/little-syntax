@@ -22,6 +22,11 @@ class NumberLiteral(Expr):
 
 
 @dataclass
+class BooleanLiteral(Expr):
+    value: bool
+
+
+@dataclass
 class VariableExpression(Expr):
     name: str
 
@@ -42,3 +47,10 @@ class SayStatement(Stmt):
 class LetStatement(Stmt):
     name: str
     value: Expr
+
+
+@dataclass
+class IfStatement(Stmt):
+    condition: Expr
+    then_branch: list[Stmt]
+    else_branch: list[Stmt] | None = None

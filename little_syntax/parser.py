@@ -1,5 +1,7 @@
 from little_syntax.ast_nodes import (
     BinaryExpression,
+    BooleanLiteral,
+    IfStatement,
     LetStatement,
     NumberLiteral,
     SayStatement,
@@ -27,6 +29,9 @@ class Parser:
         return statements
 
     def statement(self):
+        if self.match("IF"):
+            return self.if_statement()
+
         if self.match("LET"):
             return self.let_statement()
 
@@ -35,8 +40,37 @@ class Parser:
 
         token = self.peek()
         raise LittleSyntaxParserError(
-            f"I expected a command like 'let' or 'say', but found '{token.value}'."
+            f"I expected a command like 'if', 'let', or 'say', but found '{token.value}'."
         )
+
+    def if_statement(self):
+        condition = self.expression()
+
+        self.consume(
+            "LEFT_BRACE",
+            "I expected '{' after the if condition.",
+        )
+
+        then_branch = self.block()
+
+        else_branch = None
+        if self.match("ELSE"):
+            self.consume(
+                "LEFT_BRACE",
+                "I expected '{' after 'else'.",
+            )
+            else_branch = self.block()
+
+        return IfStatement(condition, then_branch, else_branch)
+
+    def block(self):
+        statements = []
+
+        while not self.check("RIGHT_BRACE") and not self.is_at_end():
+            statements.append(self.statement())
+
+        self.consume("RIGHT_BRACE", "I expected '}' to close this block.")
+        return statements
 
     def let_statement(self):
         name = self.consume(
@@ -57,7 +91,27 @@ class Parser:
         return SayStatement(value)
 
     def expression(self):
-        return self.addition()
+        return self.equality()
+
+    def equality(self):
+        expression = self.comparison()
+
+        while self.match("EQUAL_EQUAL", "BANG_EQUAL"):
+            operator = self.previous().value
+            right = self.comparison()
+            expression = BinaryExpression(expression, operator, right)
+
+        return expression
+
+    def comparison(self):
+        expression = self.addition()
+
+        while self.match("GREATER", "GREATER_EQUAL", "LESS", "LESS_EQUAL"):
+            operator = self.previous().value
+            right = self.addition()
+            expression = BinaryExpression(expression, operator, right)
+
+        return expression
 
     def addition(self):
         expression = self.multiplication()
@@ -80,6 +134,12 @@ class Parser:
         return expression
 
     def primary(self):
+        if self.match("TRUE"):
+            return BooleanLiteral(True)
+
+        if self.match("FALSE"):
+            return BooleanLiteral(False)
+
         if self.match("STRING"):
             return StringLiteral(self.previous().value)
 
@@ -101,7 +161,7 @@ class Parser:
 
         token = self.peek()
         raise LittleSyntaxParserError(
-            f"I expected a value like a number, message, or variable name, but found '{token.value}'."
+            f"I expected a value like a number, message, true/false, or variable name, but found '{token.value}'."
         )
 
     def consume(self, token_type: str, message: str) -> Token:

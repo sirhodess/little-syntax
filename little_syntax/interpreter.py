@@ -1,14 +1,25 @@
+from typing import TypeGuard
+
 from little_syntax.ast_nodes import (
     BinaryExpression,
+    BooleanLiteral,
+    Expr,
+    IfStatement,
     LetStatement,
     NumberLiteral,
     SayStatement,
+    Stmt,
     StringLiteral,
     VariableExpression,
 )
 
 
-Value = str | int | float
+Value = str | int | float | bool
+NumberValue = int | float
+
+
+def is_number_value(value: Value) -> TypeGuard[NumberValue]:
+    return type(value) in (int, float)
 
 
 class LittleSyntaxRuntimeError(Exception):
@@ -20,7 +31,7 @@ class Interpreter:
         self.output: list[str] = []
         self.environment: dict[str, Value] = {}
 
-    def run(self, statements):
+    def run(self, statements: list[Stmt]):
         for statement in statements:
             self.execute(statement)
 
@@ -30,7 +41,7 @@ class Interpreter:
             "variables": self.environment.copy(),
         }
 
-    def execute(self, statement):
+    def execute(self, statement: Stmt) -> None:
         if isinstance(statement, LetStatement):
             value = self.evaluate(statement.value)
             self.environment[statement.name] = value
@@ -41,13 +52,33 @@ class Interpreter:
             self.output.append(self.stringify(value))
             return
 
+        if isinstance(statement, IfStatement):
+            condition = self.evaluate(statement.condition)
+
+            if not isinstance(condition, bool):
+                raise LittleSyntaxRuntimeError(
+                    "An if condition must be true or false. "
+                    "Try using a comparison like: if coins >= 5"
+                )
+
+            branch = statement.then_branch if condition else statement.else_branch
+
+            if branch is not None:
+                for nested_statement in branch:
+                    self.execute(nested_statement)
+
+            return
+
         raise LittleSyntaxRuntimeError("I don't know how to run that statement yet.")
 
-    def evaluate(self, expression) -> Value:
+    def evaluate(self, expression: Expr) -> Value:
         if isinstance(expression, StringLiteral):
             return expression.value
 
         if isinstance(expression, NumberLiteral):
+            return expression.value
+
+        if isinstance(expression, BooleanLiteral):
             return expression.value
 
         if isinstance(expression, VariableExpression):
@@ -63,27 +94,54 @@ class Interpreter:
             left = self.evaluate(expression.left)
             right = self.evaluate(expression.right)
 
-            left_number, right_number = self.require_numbers(
-                left,
-                right,
-                expression.operator,
-            )
+            if expression.operator in ("+", "-", "*", "/"):
+                left_number, right_number = self.require_numbers(
+                    left,
+                    right,
+                    expression.operator,
+                )
 
-            if expression.operator == "+":
-                return left_number + right_number
+                if expression.operator == "+":
+                    return left_number + right_number
 
-            if expression.operator == "-":
-                return left_number - right_number
+                if expression.operator == "-":
+                    return left_number - right_number
 
-            if expression.operator == "*":
-                return left_number * right_number
+                if expression.operator == "*":
+                    return left_number * right_number
 
-            if expression.operator == "/":
-                if right_number == 0:
-                    raise LittleSyntaxRuntimeError(
-                        "You tried to divide by zero, but division by zero is not allowed."
-                    )
-                return left_number / right_number
+                if expression.operator == "/":
+                    if right_number == 0:
+                        raise LittleSyntaxRuntimeError(
+                            "You tried to divide by zero, but division by zero is not allowed."
+                        )
+
+                    return left_number / right_number
+
+            if expression.operator in (">", ">=", "<", "<="):
+                left_number, right_number = self.require_numbers(
+                    left,
+                    right,
+                    expression.operator,
+                )
+
+                if expression.operator == ">":
+                    return left_number > right_number
+
+                if expression.operator == ">=":
+                    return left_number >= right_number
+
+                if expression.operator == "<":
+                    return left_number < right_number
+
+                if expression.operator == "<=":
+                    return left_number <= right_number
+
+            if expression.operator == "==":
+                return left == right
+
+            if expression.operator == "!=":
+                return left != right
 
             raise LittleSyntaxRuntimeError(
                 f"I don't know how to use the operator '{expression.operator}' yet."
@@ -96,8 +154,13 @@ class Interpreter:
         left: Value,
         right: Value,
         operator: str,
-    ) -> tuple[int | float, int | float]:
-        if not isinstance(left, (int, float)) or not isinstance(right, (int, float)):
+    ) -> tuple[NumberValue, NumberValue]:
+        if not is_number_value(left):
+            raise LittleSyntaxRuntimeError(
+                f"The '{operator}' operator only works with numbers right now."
+            )
+
+        if not is_number_value(right):
             raise LittleSyntaxRuntimeError(
                 f"The '{operator}' operator only works with numbers right now."
             )
@@ -105,6 +168,9 @@ class Interpreter:
         return left, right
 
     def stringify(self, value: Value) -> str:
+        if isinstance(value, bool):
+            return "true" if value else "false"
+
         if isinstance(value, float) and value.is_integer():
             return str(int(value))
 
