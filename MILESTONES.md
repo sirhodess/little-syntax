@@ -11,9 +11,7 @@ Little Syntax is being bult in small, testable milestones. Each milestone adds o
 - [x] Add tests folder
 - [x] Add first `.ls` example file
 
-Status: In progress
-
----
+## Status: Complete
 
 ## Milestone 1: Say Command
 
@@ -31,5 +29,22 @@ say "Hello, traveler!"
 - [x] Create interpreter
 - [x] Add `run_source()` helper
 - [x] Add first test
+
+Status: Complete
+
+---
+
+## Milestone 2: Variables
+
+**Goal:** Let learners store and reuse values.
+
+Example:
+
+```ls
+let name = "Milo"
+say name
+
+Expected output: Milo
+```
 
 Status: Complete
