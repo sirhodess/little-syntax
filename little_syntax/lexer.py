@@ -1,10 +1,16 @@
 from dataclasses import dataclass
 
-# the lexer turns raw text into tokens.
+
+# The lexer turns raw text into tokens.
+# Example:
 # say "Hello"
+#
+# becomes:
 # SAY
 # STRING("Hello")
 # EOF
+
+
 @dataclass
 class Token:
     type: str
@@ -13,6 +19,13 @@ class Token:
 
 class LittleSyntaxLexerError(Exception):
     pass
+
+
+KEYWORDS = {
+    "say": "SAY",
+    "let": "LET",
+}
+
 
 def tokenize(source: str) -> list[Token]:
     tokens: list[Token] = []
@@ -25,9 +38,9 @@ def tokenize(source: str) -> list[Token]:
             i += 1
             continue
 
-        if source.startswith("say", i):
-            tokens.append(Token("SAY", "say"))
-            i += 3
+        if char == "=":
+            tokens.append(Token("EQUAL", "="))
+            i += 1
             continue
 
         if char == '"':
@@ -45,6 +58,17 @@ def tokenize(source: str) -> list[Token]:
             value = source[start:i]
             tokens.append(Token("STRING", value))
             i += 1
+            continue
+
+        if char.isalpha() or char == "_":
+            start = i
+
+            while i < len(source) and (source[i].isalnum() or source[i] == "_"):
+                i += 1
+
+            text = source[start:i]
+            token_type = KEYWORDS.get(text, "IDENTIFIER")
+            tokens.append(Token(token_type, text))
             continue
 
         raise LittleSyntaxLexerError(f"I don't understand this character yet: {char}")

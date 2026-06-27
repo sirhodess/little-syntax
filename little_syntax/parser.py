@@ -1,7 +1,12 @@
-from little_syntax.ast_nodes import SayStatement, StringLiteral
+from little_syntax.ast_nodes import (
+    LetStatement,
+    SayStatement,
+    StringLiteral,
+    VariableExpression,
+)
 from little_syntax.lexer import Token
 
-# the parser turns tokens into AST nodes
+
 class LittleSyntaxParserError(Exception):
     pass
 
@@ -20,13 +25,30 @@ class Parser:
         return statements
 
     def statement(self):
+        if self.match("LET"):
+            return self.let_statement()
+
         if self.match("SAY"):
             return self.say_statement()
 
         token = self.peek()
         raise LittleSyntaxParserError(
-            f"I expected a command like 'say', but found '{token.value}'."
+            f"I expected a command like 'let' or 'say', but found '{token.value}'."
         )
+
+    def let_statement(self):
+        name = self.consume(
+            "IDENTIFIER",
+            "I expected a variable name after 'let'. Example: let name = \"Milo\"",
+        )
+
+        self.consume(
+            "EQUAL",
+            f"I expected '=' after the variable name '{name.value}'.",
+        )
+
+        value = self.expression()
+        return LetStatement(name.value, value)
 
     def say_statement(self):
         value = self.expression()
@@ -36,15 +58,25 @@ class Parser:
         if self.match("STRING"):
             return StringLiteral(self.previous().value)
 
+        if self.match("IDENTIFIER"):
+            return VariableExpression(self.previous().value)
+
         token = self.peek()
         raise LittleSyntaxParserError(
-            f"I expected a message in quotes, but found '{token.value}'."
+            f"I expected a message in quotes or a variable name, but found '{token.value}'."
         )
+
+    def consume(self, token_type: str, message: str) -> Token:
+        if self.check(token_type):
+            return self.advance()
+
+        raise LittleSyntaxParserError(message)
 
     def match(self, token_type: str) -> bool:
         if self.check(token_type):
             self.advance()
             return True
+
         return False
 
     def check(self, token_type: str) -> bool:
