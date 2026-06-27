@@ -1,5 +1,7 @@
 from little_syntax.ast_nodes import (
+    BinaryExpression,
     LetStatement,
+    NumberLiteral,
     SayStatement,
     StringLiteral,
     VariableExpression,
@@ -55,15 +57,51 @@ class Parser:
         return SayStatement(value)
 
     def expression(self):
+        return self.addition()
+
+    def addition(self):
+        expression = self.multiplication()
+
+        while self.match("PLUS", "MINUS"):
+            operator = self.previous().value
+            right = self.multiplication()
+            expression = BinaryExpression(expression, operator, right)
+
+        return expression
+
+    def multiplication(self):
+        expression = self.primary()
+
+        while self.match("STAR", "SLASH"):
+            operator = self.previous().value
+            right = self.primary()
+            expression = BinaryExpression(expression, operator, right)
+
+        return expression
+
+    def primary(self):
         if self.match("STRING"):
             return StringLiteral(self.previous().value)
+
+        if self.match("NUMBER"):
+            value = self.previous().value
+
+            if "." in value:
+                return NumberLiteral(float(value))
+
+            return NumberLiteral(int(value))
 
         if self.match("IDENTIFIER"):
             return VariableExpression(self.previous().value)
 
+        if self.match("LEFT_PAREN"):
+            expression = self.expression()
+            self.consume("RIGHT_PAREN", "I expected ')' after this expression.")
+            return expression
+
         token = self.peek()
         raise LittleSyntaxParserError(
-            f"I expected a message in quotes or a variable name, but found '{token.value}'."
+            f"I expected a value like a number, message, or variable name, but found '{token.value}'."
         )
 
     def consume(self, token_type: str, message: str) -> Token:
@@ -72,10 +110,11 @@ class Parser:
 
         raise LittleSyntaxParserError(message)
 
-    def match(self, token_type: str) -> bool:
-        if self.check(token_type):
-            self.advance()
-            return True
+    def match(self, *token_types: str) -> bool:
+        for token_type in token_types:
+            if self.check(token_type):
+                self.advance()
+                return True
 
         return False
 

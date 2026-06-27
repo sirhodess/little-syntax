@@ -43,6 +43,36 @@ def tokenize(source: str) -> list[Token]:
             i += 1
             continue
 
+        if char == "+":
+            tokens.append(Token("PLUS", "+"))
+            i += 1
+            continue
+
+        if char == "-":
+            tokens.append(Token("MINUS", "-"))
+            i += 1
+            continue
+
+        if char == "*":
+            tokens.append(Token("STAR", "*"))
+            i += 1
+            continue
+
+        if char == "/":
+            tokens.append(Token("SLASH", "/"))
+            i += 1
+            continue
+
+        if char == "(":
+            tokens.append(Token("LEFT_PAREN", "("))
+            i += 1
+            continue
+
+        if char == ")":
+            tokens.append(Token("RIGHT_PAREN", ")"))
+            i += 1
+            continue
+
         if char == '"':
             i += 1
             start = i
@@ -58,6 +88,27 @@ def tokenize(source: str) -> list[Token]:
             value = source[start:i]
             tokens.append(Token("STRING", value))
             i += 1
+            continue
+
+        if char.isdigit():
+            start = i
+
+            while i < len(source) and source[i].isdigit():
+                i += 1
+
+            if i < len(source) and source[i] == ".":
+                i += 1
+
+                if i >= len(source) or not source[i].isdigit():
+                    raise LittleSyntaxLexerError(
+                        "I found a decimal point, but expected a number after it."
+                    )
+
+                while i < len(source) and source[i].isdigit():
+                    i += 1
+
+            value = source[start:i]
+            tokens.append(Token("NUMBER", value))
             continue
 
         if char.isalpha() or char == "_":

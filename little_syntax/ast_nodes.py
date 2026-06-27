@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 
-# meaning 
-# say "Hello"
-# becomes SayStatement(StringLiteral("Hello"))
+
 class Expr:
     """Base class for expressions."""
     pass
@@ -17,16 +15,29 @@ class Stmt:
 class StringLiteral(Expr):
     value: str
 
-#look up the value stored under name
+
+@dataclass
+class NumberLiteral(Expr):
+    value: int | float
+
+
 @dataclass
 class VariableExpression(Expr):
     name: str
+
+
+@dataclass
+class BinaryExpression(Expr):
+    left: Expr
+    operator: str
+    right: Expr
+
 
 @dataclass
 class SayStatement(Stmt):
     value: Expr
 
-#store "Milo" in a variable called name.
+
 @dataclass
 class LetStatement(Stmt):
     name: str
