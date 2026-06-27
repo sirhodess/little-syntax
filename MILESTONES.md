@@ -82,20 +82,20 @@ if coins >= 5 {
 } else {
   say "You need more coins."
 }
+
+Expected output: The gate opens!
 ```
 
 Tasks:
 
-Add if keyword
-Add else keyword
-Add boolean values with true and false
-Add comparison operators: >, >=, <, <=
-Add equality operators: ==, !=
-Add block parsing with { }
-Add if statement execution
-Add optional else branch
-Add friendly error for non-boolean conditions
-Add conditional example file
-Add conditional tests
-
-Status: Complete
+- [x] Add `if` keyword
+- [x] Add `else` keyword
+- [x] Add boolean values with `true` and `false`
+- [x] Add comparison operators: `>`, `>=`, `<`, `<=`
+- [x] Add equality operators: `==`, `!=`
+- [x] Add block parsing with `{ }`
+- [x] Add `if` statement execution
+- [x] Add optional `else` branch
+- [x] Add friendly error for non-boolean conditions
+- [x] Add conditional example file
+- [x] Add conditional tests
