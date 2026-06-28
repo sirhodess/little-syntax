@@ -99,3 +99,38 @@ Tasks:
 - [x] Add friendly error for non-boolean conditions
 - [x] Add conditional example file
 - [x] Add conditional tests
+
+---
+
+## Milestone 5: Loops with Repeat
+
+**Goal:** Let learners repeat actions with `repeat`.
+
+Example:
+
+```ls
+repeat 3 {
+  say "Glow!"
+}
+
+Expected Output:
+
+Glow!
+Glow!
+Glow!
+```
+
+Tasks:
+
+- [x] Add `repeat` keyword
+- [x] Add `repeat` AST node
+- [x] Add `repeat` parsing
+- [x] Allow `repeat` counts to use variables
+- [x] Allow `repeat` counts to use math expressions
+- [x] Execute `repeat` block multiple times
+- [x] Add friendly error for non-number `repeat` counts
+- [x] Add friendly error for decimal `repeat` counts
+- [x] Add `repeat` example file
+- [x] Add `repeat` tests
+
+Status: Complete
