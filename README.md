@@ -227,9 +227,7 @@ Little Syntax is a systems-meets-education project. It combines language design,
 
 The project is intentionally built from the ground up to show how programming tools can be made more approachable for beginners.
 
-## Roadmap
-
-Planned improvements include:
+## Planned Improvements
 
 - More quests and branching quest paths
 - Stronger quest validation
