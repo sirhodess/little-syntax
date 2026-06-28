@@ -7,6 +7,7 @@ from little_syntax.ast_nodes import (
     IfStatement,
     LetStatement,
     NumberLiteral,
+    RepeatStatement,
     SayStatement,
     Stmt,
     StringLiteral,
@@ -65,6 +66,16 @@ class Interpreter:
 
             if branch is not None:
                 for nested_statement in branch:
+                    self.execute(nested_statement)
+
+            return
+
+        if isinstance(statement, RepeatStatement):
+            count_value = self.evaluate(statement.count)
+            repeat_count = self.require_repeat_count(count_value)
+
+            for _ in range(repeat_count):
+                for nested_statement in statement.body:
                     self.execute(nested_statement)
 
             return
@@ -166,6 +177,24 @@ class Interpreter:
             )
 
         return left, right
+
+    def require_repeat_count(self, count: Value) -> int:
+        if not is_number_value(count):
+            raise LittleSyntaxRuntimeError(
+                "The repeat count must be a number. Example: repeat 3 { say \"Glow!\" }"
+            )
+
+        if isinstance(count, float) and not count.is_integer():
+            raise LittleSyntaxRuntimeError(
+                "The repeat count must be a whole number like 1, 2, or 3."
+            )
+
+        if count < 0:
+            raise LittleSyntaxRuntimeError(
+                "The repeat count cannot be negative."
+            )
+
+        return int(count)
 
     def stringify(self, value: Value) -> str:
         if isinstance(value, bool):

@@ -54,3 +54,9 @@ class IfStatement(Stmt):
     condition: Expr
     then_branch: list[Stmt]
     else_branch: list[Stmt] | None = None
+
+
+@dataclass
+class RepeatStatement(Stmt):
+    count: Expr
+    body: list[Stmt]

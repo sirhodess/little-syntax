@@ -4,6 +4,7 @@ from little_syntax.ast_nodes import (
     IfStatement,
     LetStatement,
     NumberLiteral,
+    RepeatStatement,
     SayStatement,
     StringLiteral,
     VariableExpression,
@@ -29,6 +30,9 @@ class Parser:
         return statements
 
     def statement(self):
+        if self.match("REPEAT"):
+            return self.repeat_statement()
+
         if self.match("IF"):
             return self.if_statement()
 
@@ -40,8 +44,19 @@ class Parser:
 
         token = self.peek()
         raise LittleSyntaxParserError(
-            f"I expected a command like 'if', 'let', or 'say', but found '{token.value}'."
+            f"I expected a command like 'repeat', 'if', 'let', or 'say', but found '{token.value}'."
         )
+
+    def repeat_statement(self):
+        count = self.expression()
+
+        self.consume(
+            "LEFT_BRACE",
+            "I expected '{' after the repeat count. Example: repeat 3 { say \"Glow!\" }",
+        )
+
+        body = self.block()
+        return RepeatStatement(count, body)
 
     def if_statement(self):
         condition = self.expression()

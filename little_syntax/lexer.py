@@ -28,6 +28,7 @@ KEYWORDS = {
     "else": "ELSE",
     "true": "TRUE",
     "false": "FALSE",
+    "repeat": "REPEAT",
 }
 
 
