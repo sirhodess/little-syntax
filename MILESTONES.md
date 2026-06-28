@@ -154,7 +154,7 @@ say "Hello, traveler!"
 Expected result: Quest complete!
 ```
 
-## Status: Complete
+Status: Complete
 
 ## Milestone 7: Quest Catalog and CLI Quest Runner
 
@@ -165,3 +165,32 @@ Example command:
 ```bash
 python3 -m little_syntax.quest_runner first-spell examples/quest_first_spell.ls
 ```
+
+## Milestone 8: FastAPI Backend
+
+**Goal:** Expose the Little Syntax interpreter through a web API so it can later power the Little Syntax web playground.
+
+Example:
+
+```json
+{
+  "source": "let coins = 5\nsay coins + 2"
+}
+```
+
+Tasks:
+
+- [x] Create project virtual environment
+- [x] Install FastAPI dependencies inside the project environment
+- [x] Add `requirements.txt`
+- [x] Add `.venv/` to `.gitignore`
+- [x] Add FastAPI app file
+- [x] Add `/health` endpoint
+- [x] Add `/run` endpoint
+- [x] Return interpreter output, errors, and variables as JSON
+- [x] Add API tests
+- [x] Confirm full test suite passes
+- [x] Confirm API runs locally with Uvicorn
+- [x] Confirm `/docs` opens through FastAPI Swagger UI
+
+Status: Complete
