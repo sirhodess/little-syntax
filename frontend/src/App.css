@@ -665,3 +665,168 @@ textarea:focus {
   color: #5b4b2a !important;
   background: #fff2cc !important;
 }
+
+.intro-animation {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 232, 159, 0.62), transparent 18rem),
+    radial-gradient(circle at 18% 22%, rgba(151, 198, 224, 0.28), transparent 16rem),
+    linear-gradient(180deg, rgba(255, 249, 239, 0.96), rgba(245, 234, 211, 0.92));
+  animation: introFade 2600ms ease forwards;
+}
+
+.intro-dragon {
+  position: absolute;
+  top: 26%;
+  left: -120px;
+  font-size: clamp(4rem, 10vw, 7rem);
+  filter: drop-shadow(0 18px 24px rgba(77, 58, 116, 0.22));
+  animation: dragonFly 2200ms cubic-bezier(0.2, 0.9, 0.25, 1) forwards;
+}
+
+.intro-fire {
+  position: absolute;
+  top: 36%;
+  left: 44%;
+  display: flex;
+  gap: 10px;
+  opacity: 0;
+  font-size: clamp(2rem, 5vw, 4rem);
+  filter: drop-shadow(0 14px 22px rgba(190, 85, 47, 0.24));
+  animation: fireBurst 1300ms ease 580ms forwards;
+}
+
+.intro-fire span:nth-child(2) {
+  transform: translateY(-18px) rotate(10deg);
+}
+
+.intro-fire span:nth-child(3) {
+  transform: translateY(14px) rotate(-12deg);
+}
+
+.intro-fire span:nth-child(4) {
+  transform: translateY(-4px) rotate(18deg);
+}
+
+.intro-troll {
+  position: absolute;
+  bottom: 18%;
+  left: 50%;
+  font-size: clamp(3rem, 7vw, 5rem);
+  filter: drop-shadow(0 16px 22px rgba(77, 58, 116, 0.18));
+  transform: translateX(-50%);
+  animation: trollDance 520ms ease-in-out 760ms 3;
+}
+
+.intro-caption {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  border: 3px solid rgba(132, 91, 157, 0.18);
+  border-radius: 999px;
+  padding: 12px 20px;
+  color: #49346f;
+  background: rgba(255, 246, 220, 0.72);
+  box-shadow: 0 18px 36px rgba(77, 58, 116, 0.12);
+  font-weight: 900;
+  transform: translateX(-50%);
+  animation: captionFloat 900ms ease-in-out infinite alternate;
+}
+
+@keyframes introFade {
+  0%,
+  74% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes dragonFly {
+  0% {
+    transform: translateX(0) translateY(28px) rotate(-10deg) scale(0.9);
+  }
+
+  42% {
+    transform: translateX(42vw) translateY(-10px) rotate(4deg) scale(1.08);
+  }
+
+  72% {
+    transform: translateX(58vw) translateY(6px) rotate(-3deg) scale(1);
+  }
+
+  100% {
+    transform: translateX(115vw) translateY(-24px) rotate(8deg) scale(0.94);
+  }
+}
+
+@keyframes fireBurst {
+  0% {
+    opacity: 0;
+    transform: scale(0.35) translateX(-24px);
+  }
+
+  35% {
+    opacity: 1;
+    transform: scale(1.08) translateX(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.5) translateX(72px);
+  }
+}
+
+@keyframes trollDance {
+  0% {
+    transform: translateX(-50%) translateY(0) rotate(0deg);
+  }
+
+  25% {
+    transform: translateX(-50%) translateY(-12px) rotate(-8deg);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(0) rotate(8deg);
+  }
+
+  75% {
+    transform: translateX(-50%) translateY(-8px) rotate(-5deg);
+  }
+
+  100% {
+    transform: translateX(-50%) translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes captionFloat {
+  from {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  to {
+    transform: translateX(-50%) translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-animation {
+    display: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

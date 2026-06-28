@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
+import DragonIntro from "./components/DragonIntro";
 
 type RunResponse = {
   output: string[];
@@ -124,6 +125,24 @@ function App() {
   const [result, setResult] = useState<RunResponse | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [isConsoleOpen, setIsConsoleOpen] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (prefersReducedMotion) {
+      setShowIntro(false);
+      return;
+    }
+
+    const introTimer = window.setTimeout(() => {
+      setShowIntro(false);
+    }, 2600);
+
+    return () => window.clearTimeout(introTimer);
+  }, []);
 
   const currentQuest = quests[activeQuestIndex];
   const allQuestsComplete = completedQuestIds.length === quests.length;
@@ -198,6 +217,7 @@ function App() {
 
   return (
     <main className="board-page">
+      {showIntro && <DragonIntro onDone={() => setShowIntro(false)} />}
       <div className="map-layer" aria-hidden="true">
         <span className="cloud cloud-one">☁️</span>
         <span className="cloud cloud-two">☁️</span>
@@ -208,6 +228,22 @@ function App() {
         <span className="forest forest-two">��</span>
         <span className="castle-marker">��</span>
       </div>
+
+      {showIntro && (
+        <div className="intro-animation" aria-hidden="true">
+          <div className="intro-dragon">🐉</div>
+
+          <div className="intro-fire">
+            <span>🔥</span>
+            <span>🔥</span>
+            <span>✨</span>
+            <span>🔥</span>
+          </div>
+
+          <div className="intro-troll">🧌</div>
+          <div className="intro-caption">Quest loading...</div>
+        </div>
+      )}
 
       <header className="top-bar">
         <div>
