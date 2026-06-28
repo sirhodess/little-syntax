@@ -134,3 +134,24 @@ Tasks:
 - [x] Add `repeat` tests
 
 Status: Complete
+
+---
+
+## Milestone 6: Quest Checker Prototype
+
+**Goal:** Create the first version of the quest system that can check learner code.
+
+Example quest:
+
+```txt
+Quest: First Spell
+Goal: Print "Hello, traveler!"
+
+Example Solution:
+
+say "Hello, traveler!"
+
+Expected result: Quest complete!
+```
+
+Status: Complete
