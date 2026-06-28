@@ -154,4 +154,14 @@ say "Hello, traveler!"
 Expected result: Quest complete!
 ```
 
-Status: Complete
+## Status: Complete
+
+## Milestone 7: Quest Catalog and CLI Quest Runner
+
+**Goal:** Create named quests and run quest checks from the terminal.
+
+Example command:
+
+```bash
+python3 -m little_syntax.quest_runner first-spell examples/quest_first_spell.ls
+```
